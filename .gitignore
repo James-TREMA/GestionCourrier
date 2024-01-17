@@ -1,0 +1,13 @@
+# Modules
+node_modules
+
+# Env
+.env
+
+# vscode
+.vscode
+
+#Fichier test API
+.rest
+
+cron_jobs
