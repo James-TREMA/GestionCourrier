@@ -10,4 +10,4 @@ node_modules
 #Fichier test API
 .rest
 
-.cron_jobs
+cron_jobs
