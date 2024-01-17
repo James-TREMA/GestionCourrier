@@ -32,12 +32,19 @@ mongoose.connect(process.env.URL_BASE, { dbName: "NotiMail" })
 app.use(express.json());
 
 // Configuration CORS pour permettre les requêtes de votre client
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
 app.use(cors({
-    origin: 'http://localhost:5173', // Ceci permet l'accès de toutes les origines
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'],
-    // Vous pouvez aussi ajouter des en-têtes spécifiques si nécessaire :
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 
 // Importation des routes utilisateur
 const userRoutes = require('./client/routes/user_route');
