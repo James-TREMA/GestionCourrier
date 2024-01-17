@@ -34,7 +34,7 @@ app.use(express.json());
 // Configuration CORS pour permettre les requêtes de votre client
 app.use(cors({
     origin: 'http://localhost:5173', // Ceci permet l'accès de toutes les origines
-    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'],
+    Credentials: true,
     // Vous pouvez aussi ajouter des en-têtes spécifiques si nécessaire :
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
