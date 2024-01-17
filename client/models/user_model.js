@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
   phone_number: { type: String, required: true, maxlength: 25 },
 
   // Mot de passe de l'utilisateur, requis, avec une longueur maximale de 100 caractères
-  password: { type: String, required: true, maxlength: 100 },
+  // password: { type: String, required: true, maxlength: 100 },
 
   // Date de réception du dernier courrier, facultatif
   last_received_mail: { type: Date },
@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
   mail_status: { type: String, default: 'pending' },
 
   // Code à quatre chiffres pour l'identification, facultatif, avec une longueur maximale de 4 caractères
-  four_digit_code: { type: String, required: false, maxlength: 4 },
+  four_digit_code: { type: String, required: true, maxlength: 100 },
 
   // Indicateur si l'utilisateur est un administrateur, par défaut à false
   is_admin: { type: Boolean, default: false }

@@ -9,11 +9,11 @@ const bcrypt = require('bcrypt');
 // Fonction pour générer un mot de passe alphanumérique aléatoire de 4 caractères
 function generateRandomPassword() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let password = '';
+    let four_digit_code = '';
     for (let i = 0; i < 4; i++) {
-        password += characters.charAt(Math.floor(Math.random() * characters.length));
+        four_digit_code += characters.charAt(Math.floor(Math.random() * characters.length));
     }
-    return password;
+    return four_digit_code;
 }
 
 exports.create_user = async (req, res) => {
@@ -72,7 +72,7 @@ exports.create_user = async (req, res) => {
         // Créer un nouvel utilisateur avec le mot de passe généré
         const newUser = new User({
             ...req.body,
-            password: hashedPassword,
+            four_digit_code: hashedPassword,
             is_admin: req.body.is_admin || false,
             last_picked_up: formattedDate
         });
@@ -213,19 +213,19 @@ async function comparePassword(plainPassword, hashedPassword) {
 
 // Connexion de l'utilisateur
 exports.login_user = async (req, res) => {
-  if (!req.body || !req.body.firm_name || !req.body.password) {
+  if (!req.body || !req.body.firm_name || !req.body.four_digit_code) {
       return res.status(400).json({ message: "Données manquantes dans la requête" });
   }
 
   try {
-      const { firm_name, password } = req.body;
+      const { firm_name, four_digit_code } = req.body;
       const user = await User.findOne({ firm_name });
 
       if (!user) {
           return res.status(404).json({ message: "Identification échouée. Utilisateur non trouvé." });
       }
 
-      const isPasswordMatch = await comparePassword(password, user.password);
+      const isPasswordMatch = await comparePassword(four_digit_code, user.four_digit_code);
       if (!isPasswordMatch) {
         // erreur 401 = Mot de passe incorrect
           return res.status(401).json({ message: "Mot de passe incorrect." });
@@ -233,6 +233,11 @@ exports.login_user = async (req, res) => {
 
       const token = generateToken(user);
       console.log(token)
+      res.cookie('token', token, {
+        sameSite: 'none',
+        secure: true,
+        httpOnly: false
+      });
       res.status(200).json({ message: "Identification réussie", userId: user._id, token });
   } catch (error) {
       res.status(500).json({ message: "Erreur lors de l'identification", error: error.message });

@@ -23,8 +23,6 @@ Toutes les requêtes sont relatives à la base URL suivante : `http://localhost:
       "last_name": "Nom",
       "email": "email@example.com",
       "phone_number": "0123456789",
-      "password": "motdepasse",
-      "four_digit_code": "1234"
   }
   ```
 
