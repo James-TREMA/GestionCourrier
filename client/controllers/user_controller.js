@@ -17,6 +17,7 @@ function generateRandomPassword() {
 }
 
 exports.create_user = async (req, res) => {
+  console.log(req.body)
     if (!req.body) {
         return res.status(400).json({ message: "Données manquantes dans la requête" });
     }
