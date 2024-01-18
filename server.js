@@ -4,7 +4,6 @@ require('dotenv').config();
 require('./cron_jobs');
 
 const express = require('express');
-const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
@@ -31,7 +30,6 @@ mongoose.connect(process.env.URL_BASE, { dbName: "NotiMail" })
 
 // Pour parser les requêtes JSON
 app.use(express.json());
-app.use(cookieParser());
 
 // Configuration CORS pour permettre les requêtes de votre client
 app.use(cors({

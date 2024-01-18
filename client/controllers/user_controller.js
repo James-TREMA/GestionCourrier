@@ -233,13 +233,8 @@ exports.login_user = async (req, res) => {
 
       const token = generateToken(user);
       console.log(token)
-      res.cookie('token', token, {
-        sameSite: 'none',
-        secure: true,
-        httpOnly: false
-      });
-      res.status(200).json({ message: "Identification réussie", userId: user._id, token });
-  } catch (error) {
+      res.status(200).json({ message: "Identification réussie", userId: user._id, firm_name: user.firm_name, is_admin: user.is_admin, token });
+    } catch (error) {
       res.status(500).json({ message: "Erreur lors de l'identification", error: error.message });
   }
 };
@@ -316,6 +311,8 @@ exports.delete_user = async (req, res) => {
   const userId = req.params.id;
 
   // Vérifier si l'utilisateur authentifié a le droit de supprimer cet utilisateur
+  console.log(req.userId)
+  console.log(userId)
   if (req.userId !== userId) {
     return res.status(403).json({ message: 'Action non autorisée' });
   }

@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
-  console.log("En-tête Authorization:", req.cookies['token']);
+  console.log("En-tête Authorization:", req.headers['authorization']);
 
-  const token = req.cookies['token'] ? req.cookies['token'].split(" ")[1] : null;
+  const token = req.headers['authorization'] ? req.headers['authorization'].split(" ")[1] : null;
   if (!token) {
     return res.status(403).json({ message: 'Aucun token fourni.' });
   }
@@ -17,5 +17,6 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json({ message: 'Token non valide.', error: error.message });
   }
 };
+
 
 module.exports = verifyToken;
