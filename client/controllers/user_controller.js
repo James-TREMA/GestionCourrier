@@ -330,6 +330,28 @@ exports.delete_user = async (req, res) => {
 };
 
 exports.sendModalEntreprise = async (req, res) => {
-  console.log(req.query) // avec ceci on récupère l'id de l'utilisateur
-  console.log("Autorisation validé")
-}
+  try {
+    // Récupération des userId depuis la requête
+    const userIds = req.query.userId;
+    if (!userIds) {
+      return res.status(400).json({ message: 'Aucun userId fourni' });
+    }
+
+    // Validation des userId
+    const users = await User.find({ '_id': { $in: userIds } });
+    if (users.length !== userIds.length) {
+      return res.status(404).json({ message: 'Un ou plusieurs userId ne correspondent pas' });
+    }
+
+    console.log(users)
+
+    // Logique pour traiter les utilisateurs
+    // Par exemple, envoyer des emails ou des SMS
+
+    // Réponse de succès
+    res.status(200).json({ message: 'Traitement réussi', users });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur interne du serveur', error: error.message });
+  }
+};
