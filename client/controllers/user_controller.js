@@ -331,13 +331,15 @@ exports.delete_user = async (req, res) => {
 
 exports.sendModalEntreprise = async (req, res) => {
   // verifie si il est admin
-  const userRequesting = await User.findById(req.userId);
-
+  // const userRequesting = await User.findById(req.query);
+  // console.log(req.query) // good
   // Vérifiez si l'utilisateur faisant la requête est un administrateur
-  if (!userRequesting.is_admin) {
+  if (!req.query.is_admin) {
     return res.status(403).json({ message: 'Action non autorisée' });
   }
 
+  console.log("Autorisation validé")
+ 
     // Envoyer l'email
     let transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -354,7 +356,7 @@ exports.sendModalEntreprise = async (req, res) => {
 
   let mailOptions = {
       from: process.env.EMAIL_ADDRESS,
-      to: req.body.email,
+      to: req.query.email,
       subject: 'Nouveau Mail',
       text: "Vous avez reçu un message"
   };
@@ -367,42 +369,7 @@ exports.sendModalEntreprise = async (req, res) => {
       }
   });
 
-  // Envoie de l'SMS
-  //   try {
-  //     const smsResponse = await axios.post('https://api.allmysms.com/http/9.0/sendSms/', {
-  //         apiKey: '7ef681bd916d088',
-  //         smsData: {
-  //             sender: 'NotiMail',
-  //             message: "Vous avez reçu un nouveau message",
-  //             recipients: [{ mobile: req.body.phoneNumber }] // Numéro de téléphone de l'utilisateur
-  //         }
-  //     });
-  
-  //     console.log('SMS envoyé avec succès:', smsResponse.data);
-  // } catch (error) {
-  //     console.error('Erreur lors de l\'envoi du SMS:', error);
-  
-  //     // Informations détaillées sur l'erreur
-  //     if (error.response) {
-  //         // La requête a été faite et le serveur a répondu avec un statut d'erreur
-  //         console.error("Détails de la réponse d'erreur:");
-  //         console.error("Données:", error.response.data);
-  //         console.error("Statut:", error.response.status);
-  //         console.error("En-têtes:", error.response.headers);
-  //     } else if (error.request) {
-  //         // La requête a été faite mais aucune réponse n'a été reçue
-  //         console.error("Aucune réponse reçue à la requête:", error.request);
-  //     } else {
-  //         // Une erreur s'est produite lors de la configuration de la requête
-  //         console.error("Erreur de configuration de la requête:", error.message);
-  //     }
-  
-  //     // Informations supplémentaires pour le débogage
-  //     console.error("Configuration de la requête:", error.config);
-  //     if (error.code) console.error("Code d'erreur:", error.code);
-  //     if (error.stack) console.error("Stack Trace:", error.stack);    
-  // }
 
-  // on mais la variable has_mail = false
-  // userRequesting.has_mail = false
+
+  
 }
