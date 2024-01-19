@@ -39,6 +39,9 @@ router.get('/checkMail/:userId', userController.check_mail);
 // Route pour accuser la récupération du courrier par un utilisateur (POST)
 router.post('/acknowledgeMail/:userId', userController.acknowledge_mail);
 
+// Route pour notification quand on appuie sur le button envoie Mail et SMS (POST)
+router.post('/sendModalEntreprise', userController.sendModalEntreprise);
+
 // Route pour ajouter une notification à un utilisateur (POST)
 router.post('/testNotification/:userId', async (req, res) => {
     try {
