@@ -331,24 +331,23 @@ exports.delete_user = async (req, res) => {
 
 exports.sendModalEntreprise = async (req, res) => {
   try {
-    // Récupération des userId depuis la requête
-    const userIds = req.query.userId;
+    let userIds = req.query.userId;
     if (!userIds) {
       return res.status(400).json({ message: 'Aucun userId fourni' });
     }
 
-    // Validation des userId
+    // Convertir en tableau si userIds est une chaîne
+    if (!Array.isArray(userIds)) {
+      userIds = [userIds];
+    }
+
     const users = await User.find({ '_id': { $in: userIds } });
     if (users.length !== userIds.length) {
       return res.status(404).json({ message: 'Un ou plusieurs userId ne correspondent pas' });
     }
 
-    console.log(users)
+    // Logique de traitement des utilisateurs
 
-    // Logique pour traiter les utilisateurs
-    // Par exemple, envoyer des emails ou des SMS
-
-    // Réponse de succès
     res.status(200).json({ message: 'Traitement réussi', users });
   } catch (error) {
     console.error(error);
