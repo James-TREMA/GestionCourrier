@@ -93,6 +93,16 @@ Toutes les requêtes sont relatives à la base URL suivante : `http://localhost:
 - **Description** : Permet à un utilisateur d'accuser la récupération de son courrier.
 - **Paramètres URL** : `userId` - ID de l'utilisateur.
 
+### 10. Envoyer des Notifications par Mail et SMS (sendModalEntreprise)
+
+- **URL** : `/sendModalEntreprise`
+- **Méthode** : `POST`
+- **Description** : Envoie des notifications par mail et SMS aux utilisateurs spécifiés. Cette route est utilisée pour envoyer des alertes aux utilisateurs sélectionnés depuis le frontend.
+- **Paramètres URL** : 
+  - `userId` : ID des utilisateurs. Peut être un seul ID ou un tableau d'ID.
+- **Corps de la Requête** : Aucun (les données sont passées via les paramètres URL).
+- **Exemple de Requête** :
+
 ## Utilisation
 
 Pour utiliser cette API, envoyez des requêtes HTTP aux points de terminaison décrits ci-dessus avec les méthodes, paramètres et corps de requête appropriés.
