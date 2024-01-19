@@ -330,46 +330,6 @@ exports.delete_user = async (req, res) => {
 };
 
 exports.sendModalEntreprise = async (req, res) => {
-  // verifie si il est admin
-  // const userRequesting = await User.findById(req.query);
-  // console.log(req.query) // good
-  // Vérifiez si l'utilisateur faisant la requête est un administrateur
-  if (!req.query.is_admin) {
-    return res.status(403).json({ message: 'Action non autorisée' });
-  }
-
+  console.log(req.query) // avec ceci on récupère l'id de l'utilisateur
   console.log("Autorisation validé")
- 
-    // Envoyer l'email
-    let transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: {
-          user: process.env.EMAIL_ADDRESS,
-          pass: process.env.EMAIL_PASSWORD
-      },
-      tls: {
-        ciphers: 'SSLv3'
-    }
-  });
-
-  let mailOptions = {
-      from: process.env.EMAIL_ADDRESS,
-      to: req.query.email,
-      subject: 'Nouveau Mail',
-      text: "Vous avez reçu un message"
-  };
-
-  transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-          console.log(error);
-      } else {
-          console.log('Email envoyé : ' + info.response);
-      }
-  });
-
-
-
-  
 }
