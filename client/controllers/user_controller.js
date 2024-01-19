@@ -368,41 +368,41 @@ exports.sendModalEntreprise = async (req, res) => {
   });
 
   // Envoie de l'SMS
-    try {
-      const smsResponse = await axios.post('https://api.allmysms.com/http/9.0/sendSms/', {
-          apiKey: '7ef681bd916d088',
-          smsData: {
-              sender: 'NotiMail',
-              message: "Vous avez reçu un nouveau message",
-              recipients: [{ mobile: req.body.phoneNumber }] // Numéro de téléphone de l'utilisateur
-          }
-      });
+  //   try {
+  //     const smsResponse = await axios.post('https://api.allmysms.com/http/9.0/sendSms/', {
+  //         apiKey: '7ef681bd916d088',
+  //         smsData: {
+  //             sender: 'NotiMail',
+  //             message: "Vous avez reçu un nouveau message",
+  //             recipients: [{ mobile: req.body.phoneNumber }] // Numéro de téléphone de l'utilisateur
+  //         }
+  //     });
   
-      console.log('SMS envoyé avec succès:', smsResponse.data);
-  } catch (error) {
-      console.error('Erreur lors de l\'envoi du SMS:', error);
+  //     console.log('SMS envoyé avec succès:', smsResponse.data);
+  // } catch (error) {
+  //     console.error('Erreur lors de l\'envoi du SMS:', error);
   
-      // Informations détaillées sur l'erreur
-      if (error.response) {
-          // La requête a été faite et le serveur a répondu avec un statut d'erreur
-          console.error("Détails de la réponse d'erreur:");
-          console.error("Données:", error.response.data);
-          console.error("Statut:", error.response.status);
-          console.error("En-têtes:", error.response.headers);
-      } else if (error.request) {
-          // La requête a été faite mais aucune réponse n'a été reçue
-          console.error("Aucune réponse reçue à la requête:", error.request);
-      } else {
-          // Une erreur s'est produite lors de la configuration de la requête
-          console.error("Erreur de configuration de la requête:", error.message);
-      }
+  //     // Informations détaillées sur l'erreur
+  //     if (error.response) {
+  //         // La requête a été faite et le serveur a répondu avec un statut d'erreur
+  //         console.error("Détails de la réponse d'erreur:");
+  //         console.error("Données:", error.response.data);
+  //         console.error("Statut:", error.response.status);
+  //         console.error("En-têtes:", error.response.headers);
+  //     } else if (error.request) {
+  //         // La requête a été faite mais aucune réponse n'a été reçue
+  //         console.error("Aucune réponse reçue à la requête:", error.request);
+  //     } else {
+  //         // Une erreur s'est produite lors de la configuration de la requête
+  //         console.error("Erreur de configuration de la requête:", error.message);
+  //     }
   
-      // Informations supplémentaires pour le débogage
-      console.error("Configuration de la requête:", error.config);
-      if (error.code) console.error("Code d'erreur:", error.code);
-      if (error.stack) console.error("Stack Trace:", error.stack);    
-  }
+  //     // Informations supplémentaires pour le débogage
+  //     console.error("Configuration de la requête:", error.config);
+  //     if (error.code) console.error("Code d'erreur:", error.code);
+  //     if (error.stack) console.error("Stack Trace:", error.stack);    
+  // }
 
   // on mais la variable has_mail = false
-  userRequesting.has_mail = false
+  // userRequesting.has_mail = false
 }
