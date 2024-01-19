@@ -101,7 +101,7 @@ Toutes les requêtes sont relatives à la base URL suivante : `http://localhost:
 - **Paramètres URL** : 
   - `userId` : ID des utilisateurs. Peut être un seul ID ou un tableau d'ID.
 - **Corps de la Requête** : Aucun (les données sont passées via les paramètres URL).
-- **Exemple de Requête** :
+- **Exemple de Requête** : Aucun.
 
 ## Utilisation
 
