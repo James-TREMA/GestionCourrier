@@ -375,9 +375,12 @@ exports.sendModalEntreprise = async (req, res) => {
       //         console.log('Email envoyé : ' + info.response);
       //     }
       // });
-      console.log(user.has_mail)
-      user.has_mail = true
-      console.log(user.has_mail)
+
+      try {
+        await User.findByIdAndUpdate(user._id, { has_mail: true });
+      } catch (error) {
+        console.error('Erreur lors de la mise à jour de has_mail pour l\'utilisateur', user._id, error);
+      }
     });
     
     res.status(200).json({ message: 'Traitement réussi', users });
