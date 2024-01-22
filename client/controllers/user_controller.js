@@ -404,24 +404,34 @@ exports.sendModalEntreprise = async (req, res) => {
         
             // Informations détaillées sur l'erreur
             if (error.response) {
-                // La requête a été faite et le serveur a répondu avec un statut d'erreur
+                const statusCode = error.response.status;
+                const errorData = error.response.data;
+            
                 console.error("Détails de la réponse d'erreur:");
-                console.error("Données:", error.response.data);
-                console.error("Statut:", error.response.status);
+                console.error("Données:", errorData);
+                console.error("Statut:", statusCode);
                 console.error("En-têtes:", error.response.headers);
-            } else if (error.request) {
-                // La requête a été faite mais aucune réponse n'a été reçue
+            
+                // Gestion des erreurs spécifiques
+                switch (statusCode) {
+                  case 104:
+                    console.error("Erreur 104: Compte non crédité ou crédit insuffisant.");
+                    break;
+                  // Ajoutez ici d'autres cas d'erreur spécifiques à l'API
+                  default:
+                    console.error("Erreur non spécifiée par l'API.");
+                }
+              } else if (error.request) {
                 console.error("Aucune réponse reçue à la requête:", error.request);
-            } else {
-                // Une erreur s'est produite lors de la configuration de la requête
+              } else {
                 console.error("Erreur de configuration de la requête:", error.message);
-            }
-        
-            // Informations supplémentaires pour le débogage
-            console.error("Configuration de la requête:", error.config);
-            if (error.code) console.error("Code d'erreur:", error.code);
-            if (error.stack) console.error("Stack Trace:", error.stack);    
-        }
+              }
+            
+              // Informations supplémentaires pour le débogage
+              console.error("Configuration de la requête:", error.config);
+              if (error.code) console.error("Code d'erreur:", error.code);
+              if (error.stack) console.error("Stack Trace:", error.stack);    
+          }
 
       } catch (error) {
         console.error('Erreur lors de la mise à jour de has_mail pour l\'utilisateur', user._id, error);
