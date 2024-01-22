@@ -346,17 +346,16 @@ exports.sendModalEntreprise = async (req, res) => {
       return res.status(404).json({ message: 'Un ou plusieurs userId ne correspondent pas' });
     }
 
-    users.forEach(user => {
-      (async () => {
-        try {
-          console.log('Avant mise à jour:', user.has_mail);
-          await User.findByIdAndUpdate(user._id, { has_mail: true });
-          console.log('Après mise à jour:', user.has_mail);
-        } catch (error) {
-          console.error('Erreur lors de la mise à jour de has_mail pour l\'utilisateur', user._id, error);
-        }
-      })();
-    });    
+    users.forEach(async user => {
+      try {
+        console.log('Avant mise à jour:', user.has_mail);
+        const updatedUser = await User.findByIdAndUpdate(user._id, { has_mail: true }, { new: true });
+        console.log('Après mise à jour:', updatedUser.has_mail);
+      } catch (error) {
+        console.error('Erreur lors de la mise à jour de has_mail pour l\'utilisateur', user._id, error);
+      }
+    });
+        
     
     res.status(200).json({ message: 'Traitement réussi', users });
   } catch (error) {
