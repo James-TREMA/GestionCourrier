@@ -330,6 +330,16 @@ exports.delete_user = async (req, res) => {
 };
 
 exports.sendModalEntreprise = async (req, res) => {
+  console.log(req.query.adminId)
+
+  const AdminId = req.query.adminId
+  const userAdmin = await User.find({ '_id': { $in: userIds } }).select('is_admin');
+
+
+  if (!userRequesting.is_admin) {
+    return res.status(403).json({ message: 'Action non autorisée' });
+  }
+
   try {
     let userIds = req.query.userId;
     if (!userIds) {
