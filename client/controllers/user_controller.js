@@ -331,7 +331,6 @@ exports.delete_user = async (req, res) => {
 };
 
 exports.sendModalEntreprise = async (req, res) => {
-
   const AdminId = req.query.adminId;
   const userAdmin = await User.findById(AdminId).select('is_admin');
 
@@ -355,10 +354,13 @@ exports.sendModalEntreprise = async (req, res) => {
       return res.status(404).json({ message: 'Un ou plusieurs userId ne correspondent pas' });
     }
 
-    users.forEach(async user => {
+    const auth = Buffer.from('stagiairesimts:7ef681bd916d088').toString('base64');
+
+    for (const user of users) {
       try {
         await User.findByIdAndUpdate(user._id, { has_mail: true }, { new: true });
         console.log('Status has_mail true et envoie du mail sms à l\'entreprise : ', user.firm_name);
+        
         // Envoyer l'email
         let transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
@@ -380,65 +382,63 @@ exports.sendModalEntreprise = async (req, res) => {
             text: "Vous avez reçu un message"
         };
 
-        transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email envoyé : ' + info.response);
-            }
-        });
+        await transporter.sendMail(mailOptions);
 
-        // Envoie de l'SMS
+        console.log('Email envoyé à : ' + user.email);
+
+        // Envoie de l'SMS avec fetch
+        const smsData = {
+          from: 'NotiMail',
+          to: user.phone_number,
+          text: "Vous avez reçu un nouveau message"
+        };
           try {
-            const smsResponse = await axios.post('https://api.allmysms.com/http/9.0/sendSms/', {
-                apiKey: '7ef681bd916d088',
-                smsData: {
-                    sender: 'NotiMail',
-                    message: "Vous avez reçu un nouveau message",
-                    recipients: [{ mobile: user.phone_number }] // Numéro de téléphone de l'utilisateur
-                }
+            const response = await fetch('https://api.allmysms.com/sms/send', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Basic ${auth}`,
+                'Content-Type': 'application/json',
+                'cache-control': 'no-cache'
+              },
+              body: JSON.stringify(smsData)
             });
-        
-            console.log('SMS envoyé avec succès:', smsResponse.data);
-        } catch (error) {
-            console.error('Erreur lors de l\'envoi du SMS:', error);
-        
-            // Informations détaillées sur l'erreur
-            if (error.response) {
-                const statusCode = error.response.status;
-                const errorData = error.response.data;
-            
-                console.error("Détails de la réponse d'erreur:");
-                console.error("Données:", errorData);
-                console.error("Statut:", statusCode);
-                console.error("En-têtes:", error.response.headers);
-            
-                // Gestion des erreurs spécifiques
-                switch (statusCode) {
-                  case 104:
-                    console.error("Erreur 104: Compte non crédité ou crédit insuffisant.");
-                    break;
-                  // Ajoutez ici d'autres cas d'erreur spécifiques à l'API
-                  default:
-                    console.error("Erreur non spécifiée par l'API.");
-                }
-              } else if (error.request) {
-                console.error("Aucune réponse reçue à la requête:", error.request);
-              } else {
-                console.error("Erreur de configuration de la requête:", error.message);
-              }
-            
-              // Informations supplémentaires pour le débogage
-              console.error("Configuration de la requête:", error.config);
-              if (error.code) console.error("Code d'erreur:", error.code);
-              if (error.stack) console.error("Stack Trace:", error.stack);    
-          }
 
+            const smsResponseData = await response.json();
+            console.log('SMS envoyé avec succès:', smsResponseData);
+          } catch (error) {
+            console.error('Erreur lors de l\'envoi du SMS:', error);
+            if (error.response) {
+              const statusCode = error.response.status;
+              const errorData = error.response.data;
+          
+              console.error("Détails de la réponse d'erreur:");
+              console.error("Données:", errorData);
+              console.error("Statut:", statusCode);
+              console.error("En-têtes:", error.response.headers);
+          
+              // Gestion des erreurs spécifiques
+              switch (statusCode) {
+                case 104:
+                  console.error("Erreur 104: Compte non crédité ou crédit insuffisant.");
+                  break;
+                // Ajoutez ici d'autres cas d'erreur spécifiques à l'API
+                default:
+                  console.error("Erreur non spécifiée par l'API.");
+              }
+            } else if (error.request) {
+              console.error("Aucune réponse reçue à la requête:", error.request);
+            } else {
+              console.error("Erreur de configuration de la requête:", error.message);
+            }
+          // Informations supplémentaires pour le débogage
+          console.error("Configuration de la requête:", error.config);
+          if (error.code) console.error("Code d'erreur:", error.code);
+          if (error.stack) console.error("Stack Trace:", error.stack);    
+        }
       } catch (error) {
         console.error('Erreur lors de la mise à jour de has_mail pour l\'utilisateur', user._id, error);
       }
-    });
-        
+    }
     
     res.status(200).json({ message: 'Traitement réussi', users });
   } catch (error) {

@@ -6,7 +6,7 @@ Cette documentation décrit les points de terminaison de l'API pour l'applicatio
 
 ## Base URL
 
-Toutes les requêtes sont relatives à la base URL suivante : `http://localhost:3000/api/users`
+Toutes les requêtes sont relatives à la base URL suivante : `http://localhost:3000/api/users/sendModalEntreprise`
 
 ## Endpoints
 
