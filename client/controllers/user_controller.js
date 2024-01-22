@@ -347,41 +347,16 @@ exports.sendModalEntreprise = async (req, res) => {
     }
 
     users.forEach(user => {
-      // Envoyer l'email
-      // let transporter = nodemailer.createTransport({
-      //     host: 'smtp.gmail.com',
-      //     port: 587,
-      //     secure: false,
-      //     auth: {
-      //         user: process.env.EMAIL_ADDRESS,
-      //         pass: process.env.EMAIL_PASSWORD
-      //     },
-      //     tls: {
-      //       ciphers: 'SSLv3'
-      //   }
-      // });
-
-      // let mailOptions = {
-      //     from: process.env.EMAIL_ADDRESS,
-      //     to: user.email,
-      //     subject: 'Nouveau Mail',
-      //     text: "Vous avez reçu un message"
-      // };
-
-      // transporter.sendMail(mailOptions, function(error, info){
-      //     if (error) {
-      //         console.log(error);
-      //     } else {
-      //         console.log('Email envoyé : ' + info.response);
-      //     }
-      // });
-
-      try {
-        await User.findByIdAndUpdate(user._id, { has_mail: true });
-      } catch (error) {
-        console.error('Erreur lors de la mise à jour de has_mail pour l\'utilisateur', user._id, error);
-      }
-    });
+      (async () => {
+        try {
+          console.log('Avant mise à jour:', user.has_mail);
+          await User.findByIdAndUpdate(user._id, { has_mail: true });
+          console.log('Après mise à jour:', user.has_mail);
+        } catch (error) {
+          console.error('Erreur lors de la mise à jour de has_mail pour l\'utilisateur', user._id, error);
+        }
+      })();
+    });    
     
     res.status(200).json({ message: 'Traitement réussi', users });
   } catch (error) {
