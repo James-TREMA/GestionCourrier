@@ -341,12 +341,40 @@ exports.sendModalEntreprise = async (req, res) => {
       userIds = [userIds];
     }
 
-    const users = await User.find({ '_id': { $in: userIds } });
-    if (users.length !== userIds.length) {
+    const users = await User.find({ '_id': { $in: userIds } }).select('email phone_number');    if (users.length !== userIds.length) {
       return res.status(404).json({ message: 'Un ou plusieurs userId ne correspondent pas' });
     }
 
-    // Logique de traitement des utilisateurs
+    console.log(users)
+
+    //   // Envoyer l'email
+  // let transporter = nodemailer.createTransport({
+  //     host: 'smtp.gmail.com',
+  //     port: 587,
+  //     secure: false,
+  //     auth: {
+  //         user: process.env.EMAIL_ADDRESS,
+  //         pass: process.env.EMAIL_PASSWORD
+  //     },
+  //     tls: {
+  //       ciphers: 'SSLv3'
+  //   }
+  // });
+
+  // let mailOptions = {
+  //     from: process.env.EMAIL_ADDRESS,
+  //     to: req.query.email,
+  //     subject: 'Nouveau Mail',
+  //     text: "Vous avez reçu un message"
+  // };
+
+  // transporter.sendMail(mailOptions, function(error, info){
+  //     if (error) {
+  //         console.log(error);
+  //     } else {
+  //         console.log('Email envoyé : ' + info.response);
+  //     }
+  // });
 
     res.status(200).json({ message: 'Traitement réussi', users });
   } catch (error) {
