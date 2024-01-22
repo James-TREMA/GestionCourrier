@@ -341,16 +341,80 @@ exports.sendModalEntreprise = async (req, res) => {
       userIds = [userIds];
     }
 
-    const users = await User.find({ '_id': { $in: userIds } }).select('email phone_number has_mail');
+    const users = await User.find({ '_id': { $in: userIds } }).select('firm_name email phone_number has_mail');
     if (users.length !== userIds.length) {
       return res.status(404).json({ message: 'Un ou plusieurs userId ne correspondent pas' });
     }
 
     users.forEach(async user => {
       try {
-        console.log('Avant mise à jour:', user.has_mail);
-        const updatedUser = await User.findByIdAndUpdate(user._id, { has_mail: true }, { new: true });
-        console.log('Après mise à jour:', updatedUser.has_mail);
+        await User.findByIdAndUpdate(user._id, { has_mail: true }, { new: true });
+        console.log('Status has_mail true et envoie du mail sms à l\'entreprise : ', user.firm_name);
+        // Envoyer l'email
+        let transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.EMAIL_ADDRESS,
+                pass: process.env.EMAIL_PASSWORD
+            },
+            tls: {
+              ciphers: 'SSLv3'
+          }
+        });
+
+        let mailOptions = {
+            from: process.env.EMAIL_ADDRESS,
+            to: user.email,
+            subject: 'Nouveau Mail',
+            text: "Vous avez reçu un message"
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email envoyé : ' + info.response);
+            }
+        });
+
+        // Envoie de l'SMS
+        //   try {
+        //     const smsResponse = await axios.post('https://api.allmysms.com/http/9.0/sendSms/', {
+        //         apiKey: '7ef681bd916d088',
+        //         smsData: {
+        //             sender: 'NotiMail',
+        //             message: "Vous avez reçu un nouveau message",
+        //             recipients: [{ mobile: user.phone_number }] // Numéro de téléphone de l'utilisateur
+        //         }
+        //     });
+        
+        //     console.log('SMS envoyé avec succès:', smsResponse.data);
+        // } catch (error) {
+        //     console.error('Erreur lors de l\'envoi du SMS:', error);
+        
+        //     // Informations détaillées sur l'erreur
+        //     if (error.response) {
+        //         // La requête a été faite et le serveur a répondu avec un statut d'erreur
+        //         console.error("Détails de la réponse d'erreur:");
+        //         console.error("Données:", error.response.data);
+        //         console.error("Statut:", error.response.status);
+        //         console.error("En-têtes:", error.response.headers);
+        //     } else if (error.request) {
+        //         // La requête a été faite mais aucune réponse n'a été reçue
+        //         console.error("Aucune réponse reçue à la requête:", error.request);
+        //     } else {
+        //         // Une erreur s'est produite lors de la configuration de la requête
+        //         console.error("Erreur de configuration de la requête:", error.message);
+        //     }
+        
+        //     // Informations supplémentaires pour le débogage
+        //     console.error("Configuration de la requête:", error.config);
+        //     if (error.code) console.error("Code d'erreur:", error.code);
+        //     if (error.stack) console.error("Stack Trace:", error.stack);    
+        // }
+
       } catch (error) {
         console.error('Erreur lors de la mise à jour de has_mail pour l\'utilisateur', user._id, error);
       }
