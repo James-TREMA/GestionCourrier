@@ -33,14 +33,14 @@ app.use(express.json());
 
 // Configuration CORS pour permettre les requêtes de votre client
 app.use(cors({
-    origin: 'http://localhost:5173', // Ceci permet l'accès de toutes les origines
+    origin: [process.env.OVH_ANDRE, process.env.LOCALHOST, process.env.OVH_KEVIN], // Ceci permet l'accès de toutes les origines
     credentials: true,
     // Vous pouvez aussi ajouter des en-têtes spécifiques si nécessaire :
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Importation des routes utilisateur
-const userRoutes = require('./client/routes/user_route');
+const userRoutes = require('./client/routes/user_route'); 
 
 // Utilisation des routes utilisateur dans l'application
 app.use('/api/users', userRoutes);
