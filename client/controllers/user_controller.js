@@ -237,11 +237,11 @@ exports.login_user = async (req, res) => {
           return res.status(404).json({ message: "Identification échouée. Utilisateur non trouvé." });
       }
 
-      // const isPasswordMatch = await comparePassword(four_digit_code, user.four_digit_code);
-      // if (!isPasswordMatch) {
-      //   // erreur 401 = Mot de passe incorrect
-      //     return res.status(401).json({ message: "Mot de passe incorrect." });
-      // }
+      const isPasswordMatch = await comparePassword(four_digit_code, user.four_digit_code);
+      if (!isPasswordMatch) {
+        // erreur 401 = Mot de passe incorrect
+          return res.status(401).json({ message: "Mot de passe incorrect." });
+      }
 
       const token = generateToken(user);
       console.log(token)
