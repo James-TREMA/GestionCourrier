@@ -300,23 +300,26 @@ exports.get_user_by_firm_name = async (req, res) => {
 // Met à jour un utilisateur
 exports.update_user = async (req, res) => {
   console.log(req)
-  // const adminId = req.query.adminId;
-  // const userIdToUpdate = req.query.userId;
+
+  const adminId = req.query.adminId;
+  const userIdToUpdate = req.query.userId;
 
   // console.log(adminId)
   // console.log(userIdToUpdate)
 
-  // const userRequesting = await User.findById(req.userId);
+  const userRequesting = await User.findById(req.userId);
 
-  // // Vérifier si l'utilisateur qui fait la demande est l'administrateur
-  // if (!userRequesting.is_admin || userRequesting._id.toString() !== adminId) {
-  //   return res.status(403).json({ message: 'Action non autorisée' });
-  // }
+  // Vérifier si l'utilisateur qui fait la demande est l'administrateur
+  if (!userRequesting.is_admin || userRequesting._id.toString() !== adminId) {
+    return res.status(403).json({ message: 'Action non autorisée' });
+  }
 
-  // // Vérifier si l'administrateur essaie de se mettre à jour lui-même
-  // if (adminId === userIdToUpdate) {
-  //   return res.status(400).json({ message: 'Un administrateur ne peut pas se mettre à jour lui-même via cette route' });
-  // }
+  // Vérifier si l'administrateur essaie de se mettre à jour lui-même
+  if (adminId === userIdToUpdate) {
+    return res.status(400).json({ message: 'Un administrateur ne peut pas se mettre à jour lui-même via cette route' });
+  }
+
+  console.log("A passer tout les test de validation")
 
   // try {
   //   const updatedUser = await User.findByIdAndUpdate(userIdToUpdate, req.body, { new: true });
