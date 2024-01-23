@@ -302,6 +302,11 @@ exports.update_user = async (req, res) => {
   const userIdToUpdate = req.params.id;
   const userRequesting = await User.findById(req.userId);
 
+  console.log("Passe dans exports.update_user")
+
+  console.log("admin : ", userRequesting)
+  console.log("user : ", userIdToUpdate)
+
   // Vérifiez si l'utilisateur faisant la requête est un administrateur ou l'utilisateur lui-même
   if (!userRequesting.is_admin && req.userId !== userIdToUpdate) {
     return res.status(403).json({ message: 'Action non autorisée' });
