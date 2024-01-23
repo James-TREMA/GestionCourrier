@@ -78,45 +78,57 @@ exports.create_user = async (req, res) => {
             last_picked_up: formattedDate
         });
 
-        // Système d'envoie par SMS pour le mot de passe
-      //   try {
-      //     const smsResponse = await axios.post('https://api.allmysms.com/http/9.0/sendSms/', {
-      //         apiKey: '7ef681bd916d088',
-      //         smsData: {
-      //             sender: 'NotiMail',
-      //             message: `Votre compte a été créé avec succès! Votre mot de passe est : ${randomPassword} pour vous connecter.`,
-      //             recipients: [{ mobile: req.body.phoneNumber }] // Numéro de téléphone de l'utilisateur
-      //         }
-      //     });
-      
-      //     console.log('SMS envoyé avec succès:', smsResponse.data);
-      // } catch (error) {
-      //     console.error('Erreur lors de l\'envoi du SMS:', error);
-      
-      //     // Informations détaillées sur l'erreur
-      //     if (error.response) {
-      //         // La requête a été faite et le serveur a répondu avec un statut d'erreur
-      //         console.error("Détails de la réponse d'erreur:");
-      //         console.error("Données:", error.response.data);
-      //         console.error("Statut:", error.response.status);
-      //         console.error("En-têtes:", error.response.headers);
-      //     } else if (error.request) {
-      //         // La requête a été faite mais aucune réponse n'a été reçue
-      //         console.error("Aucune réponse reçue à la requête:", error.request);
-      //     } else {
-      //         // Une erreur s'est produite lors de la configuration de la requête
-      //         console.error("Erreur de configuration de la requête:", error.message);
-      //     }
-      
-      //     // Informations supplémentaires pour le débogage
-      //     console.error("Configuration de la requête:", error.config);
-      //     if (error.code) console.error("Code d'erreur:", error.code);
-      //     if (error.stack) console.error("Stack Trace:", error.stack);
-      
-      //     // Gérer l'erreur comme vous le souhaitez
-      // }
-      
+        // Envoie de l'SMS avec fetch
+        const auth = Buffer.from('stagiairesimts:7ef681bd916d088').toString('base64');
+        const smsData = {
+          from: 'NotiMail',
+          to: req.body.phone_number,
+          text: `Bonjour, voici votre mot de passe : ${randomPassword}`
+        };
+          try {
+            const response = await fetch('https://api.allmysms.com/sms/send', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Basic ${auth}`,
+                'Content-Type': 'application/json',
+                'cache-control': 'no-cache'
+              },
+              body: JSON.stringify(smsData)
+            });
 
+            const smsResponseData = await response.json();
+            console.log('SMS envoyé avec succès:', smsResponseData);
+          } catch (error) {
+            console.error('Erreur lors de l\'envoi du SMS:', error);
+            if (error.response) {
+              const statusCode = error.response.status;
+              const errorData = error.response.data;
+          
+              console.error("Détails de la réponse d'erreur:");
+              console.error("Données:", errorData);
+              console.error("Statut:", statusCode);
+              console.error("En-têtes:", error.response.headers);
+          
+              // Gestion des erreurs spécifiques
+              switch (statusCode) {
+                case 104:
+                  console.error("Erreur 104: Compte non crédité ou crédit insuffisant.");
+                  break;
+                // Ajoutez ici d'autres cas d'erreur spécifiques à l'API
+                default:
+                  console.error("Erreur non spécifiée par l'API.");
+              }
+            } else if (error.request) {
+              console.error("Aucune réponse reçue à la requête:", error.request);
+            } else {
+              console.error("Erreur de configuration de la requête:", error.message);
+            }
+          // Informations supplémentaires pour le débogage
+          console.error("Configuration de la requête:", error.config);
+          if (error.code) console.error("Code d'erreur:", error.code);
+          if (error.stack) console.error("Stack Trace:", error.stack);    
+        }
+      
         const savedUser = await newUser.save();
         res.status(201).json(savedUser);
     } catch (error) {
