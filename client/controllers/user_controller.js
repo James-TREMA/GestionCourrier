@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt');
 function generateRandomPassword() {
     const characters = '0123456789';
     let four_digit_code = '';
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 4; i++) {
         four_digit_code += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     return four_digit_code;
