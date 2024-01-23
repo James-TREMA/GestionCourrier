@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middlewares/auth');
 
-
 // Importation du contrôleur utilisateur pour gérer les requêtes
 const userController = require('../controllers/user_controller');
 
