@@ -47,12 +47,11 @@ Toutes les requêtes sont relatives à la base URL suivante : `http://localhost:
 
 ### 5. Mettre à Jour un Utilisateur
 
-- **URL** : `/update/:adminId/:userId`
+- **URL** : `/update/:id`
 - **Méthode** : `PUT`
 - **Description** : Met à jour les informations d'un utilisateur spécifique par un administrateur.
 - **Paramètres URL** : 
-  - `adminId` - ID de l'administrateur effectuant la mise à jour.
-  - `userId` - ID de l'utilisateur à mettre à jour.
+  - `_id` - ID de l'utilisateur à mettre à jour.
 - **Corps de la Requête** :
   ```json
   {
