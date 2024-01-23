@@ -299,29 +299,34 @@ exports.get_user_by_firm_name = async (req, res) => {
 
 // Met à jour un utilisateur
 exports.update_user = async (req, res) => {
-  const adminId = req.params.adminId;
-  const userIdToUpdate = req.params.userId;
-  const userRequesting = await User.findById(req.userId);
+  console.log(req)
+  // const adminId = req.query.adminId;
+  // const userIdToUpdate = req.query.userId;
 
-  // Vérifier si l'utilisateur qui fait la demande est l'administrateur
-  if (!userRequesting.is_admin || userRequesting._id.toString() !== adminId) {
-    return res.status(403).json({ message: 'Action non autorisée' });
-  }
+  // console.log(adminId)
+  // console.log(userIdToUpdate)
 
-  // Vérifier si l'administrateur essaie de se mettre à jour lui-même
-  if (adminId === userIdToUpdate) {
-    return res.status(400).json({ message: 'Un administrateur ne peut pas se mettre à jour lui-même via cette route' });
-  }
+  // const userRequesting = await User.findById(req.userId);
 
-  try {
-    const updatedUser = await User.findByIdAndUpdate(userIdToUpdate, req.body, { new: true });
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'Utilisateur non trouvé' });
-    }
-    res.status(200).json({ message: 'Utilisateur mis à jour', updatedUser });
-  } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'utilisateur', error });
-  }
+  // // Vérifier si l'utilisateur qui fait la demande est l'administrateur
+  // if (!userRequesting.is_admin || userRequesting._id.toString() !== adminId) {
+  //   return res.status(403).json({ message: 'Action non autorisée' });
+  // }
+
+  // // Vérifier si l'administrateur essaie de se mettre à jour lui-même
+  // if (adminId === userIdToUpdate) {
+  //   return res.status(400).json({ message: 'Un administrateur ne peut pas se mettre à jour lui-même via cette route' });
+  // }
+
+  // try {
+  //   const updatedUser = await User.findByIdAndUpdate(userIdToUpdate, req.body, { new: true });
+  //   if (!updatedUser) {
+  //     return res.status(404).json({ message: 'Utilisateur non trouvé' });
+  //   }
+  //   res.status(200).json({ message: 'Utilisateur mis à jour', updatedUser });
+  // } catch (error) {
+  //   res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'utilisateur', error });
+  // }
 };
 
 // Supprime un utilisateur
