@@ -24,7 +24,7 @@ router.get('/gestionEntrepriseFirmName', userController.get_all_FirmName)
 // router.post('/gestionEntreprise', userController.showGestionForm);
 
 // Route pour mettre à jour un utilisateur par son ID (PUT)
-router.put('/update/:id', verifyToken, userController.update_user);
+router.put('/update/:adminId/:userId', verifyToken, userController.update_user);
 
 // Route pour supprimer un utilisateur par son ID (DELETE)
 router.delete('/delete/:id', verifyToken, userController.delete_user);
