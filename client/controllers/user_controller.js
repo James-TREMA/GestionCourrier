@@ -5,13 +5,12 @@ const { hashPassword } = require('../utils/hash_util');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const axios = require('axios')
 
 // Fonction pour générer un mot de passe alphanumérique aléatoire de 4 caractères
 function generateRandomPassword() {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const characters = '0123456789';
     let four_digit_code = '';
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 6; i++) {
         four_digit_code += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     return four_digit_code;
