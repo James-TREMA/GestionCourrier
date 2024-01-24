@@ -299,41 +299,17 @@ exports.get_user_by_firm_name = async (req, res) => {
 
 // Met à jour un utilisateur
 exports.update_user = async (req, res) => {
-  console.log(req)
+  const userIdToUpdate = req.params.id;
 
-  // const adminId = req.query.adminId;
-  // const userIdToUpdate = req.query.userId;
-  // const userRequesting = await User.findById(req.userId);
-
-  // console.log(adminId)
-  // console.log(userIdToUpdate)
-  // console.log(userRequesting)
-
-  // if (!userRequesting) {
-  //   return res.status(404).json({ message: "Utilisateur demandeur non trouvé" });
-  // }  
-
-  // // Vérifier si l'utilisateur qui fait la demande est l'administrateur
-  // if (!userRequesting.is_admin || userRequesting._id.toString() !== adminId) {
-  //   return res.status(403).json({ message: 'Action non autorisée' });
-  // }
-
-  // // Vérifier si l'administrateur essaie de se mettre à jour lui-même
-  // if (adminId === userIdToUpdate) {
-  //   return res.status(400).json({ message: 'Un administrateur ne peut pas se mettre à jour lui-même via cette route' });
-  // }
-
-  // console.log("A passer tout les test de validation")
-
-  // try {
-  //   const updatedUser = await User.findByIdAndUpdate(userIdToUpdate, req.body, { new: true });
-  //   if (!updatedUser) {
-  //     return res.status(404).json({ message: 'Utilisateur non trouvé' });
-  //   }
-  //   res.status(200).json({ message: 'Utilisateur mis à jour', updatedUser });
-  // } catch (error) {
-  //   res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'utilisateur', error });
-  // }
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userIdToUpdate, req.body, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+    res.status(200).json({ message: 'Utilisateur mis à jour', updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'utilisateur', error });
+  }
 };
 
 // Supprime un utilisateur
